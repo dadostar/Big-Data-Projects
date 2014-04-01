@@ -3,9 +3,7 @@ package SparkTest005
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 
-/**
- * Created by davide on 31/03/14.
- */
+
 object Exercise2 {
   def main(args: Array[String]) {
 
@@ -13,8 +11,11 @@ object Exercise2 {
     val file = sc.textFile("hdfs://localhost:9000/data/esempio.txt")
 
     val pairs = file.flatMap(hobby2name).reduceByKey(_ ::: _)
+    val namestopairs = pairs.flatMap(pair =>{
+      pair._2.combinations(2)
+    }).map(l=> l(0)+" , "+l(1))
 
-    pairs.saveAsTextFile("hdfs://localhost:9000/data/output/exercise2/")
+    namestopairs.saveAsTextFile("hdfs://localhost:9000/data/output/exercise2/")
 
 
   }
@@ -22,11 +23,6 @@ object Exercise2 {
   def hobby2name(line:String) : List[Tuple2[String,List[String]]] = {
     val name::hobbies = line.split(" ").toList
     hobbies.map(hobby => (hobby, List(name)))
-  }
-
-  def names2pairs(names: List[String]): List[Tuple2[String, String]] = {
-    var ret = List()
-    names.permutations() foreach
   }
 
 }
