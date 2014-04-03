@@ -24,6 +24,6 @@ object Exercise2 {
   }
 
   def names2pairs(names: List[String]): List[Tuple2[String, Int]] = {
-    names.combinations(2).toList.map(couple => ("%s, %s".format(couple(0), couple(1)), 0))
+    names.combinations(2).toList.map(couple => ("%s,%s".format(couple(0), couple(1)), 0))
   }
 }
