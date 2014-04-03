@@ -11,11 +11,9 @@ object Exercise2 {
     val file = sc.textFile("hdfs://localhost:9000/data/esempio.txt")
 
     val pairs = file.flatMap(hobby2name).reduceByKey(_ ::: _)
-    val namestopairs = pairs.flatMap(pair =>{
-      pair._2.combinations(2)
-    }).map(l=> l(0)+" , "+l(1))
+    val result = pairs.flatMap(pair => names2pairs(pair._2)).reduceByKey(_ + _).map(_._1)
 
-    namestopairs.saveAsTextFile("hdfs://localhost:9000/data/output/exercise2/")
+    result.saveAsTextFile("hdfs://localhost:9000/data/output/exercise2/")
 
 
   }
@@ -25,4 +23,7 @@ object Exercise2 {
     hobbies.map(hobby => (hobby, List(name)))
   }
 
+  def names2pairs(names: List[String]): List[Tuple2[String, Int]] = {
+    names.combinations(2).toList.map(couple => ("%s, %s".format(couple(0), couple(1)), 0))
+  }
 }

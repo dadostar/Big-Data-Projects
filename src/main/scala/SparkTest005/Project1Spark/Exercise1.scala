@@ -15,9 +15,9 @@ object Exercise1 {
 
 
     val sortedHobbies = hobbies
-      .map(x => x.swap)
+      .map(_.swap)
       .sortByKey(false)
-      .map(x => x.swap)
+      .map(_.swap)
 
     sortedHobbies.saveAsTextFile("hdfs://localhost:9000/data/output/exercise1/")
   }
