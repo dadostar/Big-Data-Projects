@@ -1,4 +1,4 @@
-package SparkTest005
+package SparkTest005.Project1Spark
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
