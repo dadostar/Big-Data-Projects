@@ -5,9 +5,10 @@ import org.apache.spark.SparkContext._
 
 object Exercise1 {
   def main(args: Array[String]) {
-    val sc = new SparkContext("local","simpleapp")
+    val sc = new SparkContext("spark://ec2-54-185-216-73.us-west-2.compute.amazonaws.com:7077", "Ex3",
+      System.getenv("SPARK_HOME"), Seq("s3n://littledatabucket/jars/SparkTest005.jar"), null, null)
 
-    val file = sc.textFile("hdfs://localhost:9000/data/esempio.txt")
+    val file = sc.textFile("s3n://littledatabucket/input/esempio5k.txt")
 
     val hobbies = file.flatMap(extractHobby)
       .map(hobby => (hobby, 1))
@@ -19,7 +20,7 @@ object Exercise1 {
       .sortByKey(false)
       .map(_.swap)
 
-    sortedHobbies.saveAsTextFile("hdfs://localhost:9000/data/output/exercise1/")
+    sortedHobbies.saveAsTextFile("s3n://littledatabucket/output/es2/")
   }
 
 

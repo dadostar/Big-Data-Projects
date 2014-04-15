@@ -1,5 +1,6 @@
 package SparkTest005.Project1Spark
 
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 
@@ -8,13 +9,19 @@ import org.apache.spark.SparkContext._
  */
 object Exercise3 {
   def main(args: Array[String]) {
-    val sc = new SparkContext("local","simpleapp")
-    val file = sc.textFile("hdfs://localhost:9000/data/esempio.txt")
+
+
+
+    val sc = new SparkContext("spark://ec2-54-185-216-73.us-west-2.compute.amazonaws.com:7077", "Ex3",
+      System.getenv("SPARK_HOME"), Seq("s3n://littledatabucket/jars/SparkTest005.jar"))
+
+
+    val file = sc.textFile("s3n://littledatabucket/input/esempio5k.txt")
 
     val pairs = file.flatMap(hobby2name).reduceByKey(_ ::: _)
     val result = pairs.flatMap(couple2hobby).reduceByKey(_ ::: _).map(x => "%s %s".format(x._1, x._2.mkString(" ")))
 
-    result.saveAsTextFile("hdfs://localhost:9000/data/output/exercise3/")
+    result.saveAsTextFile("s3n://littledatabucket/output/es3/")
   }
 
   def hobby2name(line:String) : List[Tuple2[String,List[String]]] = {
